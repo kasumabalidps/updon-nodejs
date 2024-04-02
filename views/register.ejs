@@ -206,13 +206,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const alertError = document.getElementById('alert-error');
 
     if (password !== confirmPassword) {
-      e.preventDefault(); // Prevent form submission
-      alertError.style.display = 'block'; // Show error message
+      e.preventDefault(); 
+      alertError.style.display = 'block'; 
       setTimeout(function() {
-        alertError.style.display = 'none'; // Hide error message after 5 seconds
+        alertError.style.display = 'none'; 
       }, 5000);
     } else {
-      alertError.style.display = 'none'; // Ensure error message is hidden if passwords match
+      alertError.style.display = 'none';
     }
   });
 
