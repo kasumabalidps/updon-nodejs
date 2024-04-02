@@ -90,20 +90,42 @@
       0%, 100% { transform: rotate(-3deg); }
       50% { transform: rotate(3deg); }
     }
+    .navbar-custom {
+    min-height: 48px; /* Minimum height */
+    max-height: 56px; /* Maximum height */
+  }
+
+  .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 48px;
+  }
+
+  .navbar-toggler {
+    padding: .25rem .75rem;
+  }
+
+  .navbar-custom .dropdown-menu a {
+    line-height: normal;
+    padding: .25rem 1.5rem;
+  }
+  .navbar {
+    padding-top: 100px;
+  }
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-xxl px-4"> <!-- Add a container with horizontal padding -->
-      <a class="navbar-brand" href="/">
-        <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224648115399954443/b7wzVeW.png?ex=661e416f&is=660bcc6f&hm=fc4beb142a03dbb51bf89ad70f15caf2fb1143c66a26757a7c64dcc9e93a164a&" width="30" height="30" class="d-inline-block align-top" alt="">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+    <div class="container" style="padding-left: 15px; padding-right: 15px;"> <!-- Adjusted padding -->
+      <a class="navbar-brand bg-ligh" href="/">
+        <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224648115399954443/b7wzVeW.png?ex=661e416f&is=660bcc6f&hm=fc4beb142a03dbb51bf89ad70f15caf2fb1143c66a26757a7c64dcc9e93a164a&" width="30" height="30" class="d-inline-block align-top" alt="Logo">
         File Upload Portal
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav mr-auto">
           <li class="nav-item">
             <a class="nav-link" href="/upload">Upload</a>
           </li>
@@ -117,13 +139,13 @@
         <div class="navbar-nav">
           <% if(user) { %>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224649818098630676/u9N87X0.png?ex=661e4305&is=660bce05&hm=a626b17726d452ef6f9ef09468d9a99283329a83b6c0060ec8455d0e34c86c79&" alt="" width="30" height="30" class="d-inline-block align-top">
                 <%= user.email %>
               </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              </ul>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="/logout">Logout</a>
+              </div>
             </li>
           <% } else { %>
             <a class="nav-item nav-link btn-text-auth" href="/login">Login</a>
