@@ -157,42 +157,47 @@
   </nav>
 
   <div class="container">
-    <h2>Uploaded Files</h2>
-    <div class="view-switch text-right">
-      <button id="list-view-btn" class="btn btn-primary">List View</button>
-      <button id="grid-view-btn" class="btn btn-primary">Grid View</button>
-    </div>
-  
-    <!-- Tampilan List -->
-    <div id="list-view" class="file-view">
-      <ul class="list-group">
-        <% files.forEach(function(file) { %>
-          <li class="list-group-item">
-            <%= file %>
-            <a href="/uploads/<%= file %>" class="btn btn-secondary btn-sm" download>Download</a>
-          </li>
-        <% }); %>
-      </ul>
-    </div>
-  
-    <!-- Tampilan Plot -->
-    <div id="grid-view" class="file-view" style="display: none;">
-      <div class="row">
-        <% files.forEach(function(file) { %>
-          <div class="col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 file-card">
-              <% if (/\.(jpe?g|png|gif|bmp)$/i.test(file)) { %>
-                <img src="/uploads/<%= file %>" class="card-img-top" alt="<%= file %>">
-              <% } %>
-              <div class="card-body">
-                <h5 class="card-title"><%= file %></h5>
-                <a href="/uploads/<%= file %>" class="btn btn-primary" download>Download</a>
-              </div>
-            </div>
-          </div>
-        <% }); %>
+    <div class="row align-items-center mb-4"> <!-- Baris untuk judul dan tombol -->
+      <div class="col-md-8"> <!-- Kolom untuk judul -->
+        <h2>Uploaded Files</h2>
+      </div>
+      <div class="col-md-4 text-right"> <!-- Kolom untuk tombol, dengan teks rata kanan -->
+        <button id="list-view-btn" class="btn btn-primary">List View</button>
+        <button id="grid-view-btn" class="btn btn-primary">Grid View</button>
       </div>
     </div>
+  
+  <!-- Tampilan List -->
+  <div id="list-view" class="file-view">
+    <ul class="list-group">
+      <% files.forEach(function(file) { %>
+        <li class="list-group-item">
+          <%= file %>
+          <a href="/uploads/<%= file %>" class="btn btn-secondary btn-sm" download>Download</a>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+
+  <!-- Tampilan Grid -->
+  <div id="grid-view" class="file-view" style="display: none;">
+    <div class="row">
+      <% files.forEach(function(file) { %>
+        <div class="col-md-4 col-sm-6 mb-4">
+          <div class="card h-100 file-card">
+            <% if (/\.(jpe?g|png|gif|bmp)$/i.test(file)) { %>
+              <img src="/uploads/<%= file %>" class="card-img-top" alt="<%= file %>">
+            <% } %>
+            <div class="card-body">
+              <h5 class="card-title"><%= file %></h5>
+              <a href="/uploads/<%= file %>" class="btn btn-primary" download>Download</a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

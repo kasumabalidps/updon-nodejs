@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.use(express.static('public'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // fix
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
@@ -62,6 +63,7 @@ function addUpload(uploadData) {
 function writeDb(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
+
 
 app.get('/', (req, res) => {
   fs.readdir('uploads/', (err, files) => {
