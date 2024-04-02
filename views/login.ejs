@@ -1,121 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <style>
-      body {
-        background-color: #f7f7f7;
-        font-family: 'Poppins', sans-serif;
-      }
-      .navbar-custom {
-        background: linear-gradient(45deg, #007bff, #00dbde);
-        color: white;
-      }
-      .navbar-custom .navbar-brand, .navbar-custom .nav-link {
-        color: white;
-      }
-      .navbar-custom .nav-link:hover, .navbar-custom .nav-item.active .nav-link {
-        color: #ffc107;
-      }
-      .btn-text-auth {
-        color: white;
-        background-color: transparent;
-        border: none;
-        transition: color 0.3s;
-      }
-      .btn-text-auth:hover {
-        color: #ffc107;
-        text-decoration: underline;
-      }
-      .container {
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        margin-top: 20px;
-      }
-      .drag-area {
-        background-color: #ffffff;
-        border: 2px dashed #007bff;
-        border-radius: 10px;
-        width: 100%;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        text-align: center;
-        margin-bottom: 15px;
-        transition: background-color 0.3s;
-      }
-      .drag-area.active {
-        background-color: #e9f5ff;
-        animation: wiggle 0.2s ease infinite;
-      }
-      .drag-area:hover {
-        cursor: pointer;
-      }
-      .icon {
-        font-size: 48px;
-        color: #007bff;
-        margin-bottom: 10px;
-      }
-      .btn-custom {
-        color: white;
-        background-color: #007bff;
-        border-color: #007bff;
-      }
-      .btn-custom:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-      }
-      .progress {
-        height: 25px;
-        display: none;
-        margin-bottom: 20px;
-      }
-      .progress-bar {
-        width: 0%;
-        transition: width 0.4s ease;
-      }
-      #file-chosen {
-        margin-top: 10px;
-      }
-      @keyframes wiggle {
-        0%, 100% { transform: rotate(-3deg); }
-        50% { transform: rotate(3deg); }
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <style>
+    body {
+      background-color: #f7f7f7;
+      font-family: 'Poppins', sans-serif;
+    }
+    .navbar-custom {
+      background: linear-gradient(45deg, #007bff, #00dbde);
+      color: white;
+    }
+    .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+      color: white;
+    }
+    .navbar-custom .nav-link:hover, .navbar-custom .nav-item.active .nav-link {
+      color: #ffc107;
+    }
+    .btn-text-auth {
+      color: white;
+      background-color: transparent;
+      border: none;
+      transition: color 0.3s;
+    }
+    .btn-text-auth:hover {
+      color: #ffc107;
+      text-decoration: underline;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      margin-top: 20px;
+    }
+    .drag-area {
+      background-color: #ffffff;
+      border: 3px dashed #007bff;
+      border-radius: 10px;
+      width: 100%;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: 15px;
+      transition: background-color 0.3s;
+    }
+    .drag-area.active {
+      background-color: #e9f5ff;
+      animation: wiggle 0.2s ease infinite;
+    }
+    .drag-area:hover {
+      cursor: pointer;
+    }
+    .icon {
+      font-size: 48px;
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+    .btn-custom {
+      color: white;
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+    .btn-custom:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+    .progress {
+      height: 25px;
+      display: none;
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    #file-chosen {
+      margin-top: 10px;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+    .navbar-custom {
+    min-height: 48px;
+    max-height: 56px;
+    }
+    .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+      padding-top: 0;
+      padding-bottom: 0;
+      line-height: 48px;
+    }
+    .navbar-toggler {
+      padding: .25rem .75rem;
+    }
+    .navbar-custom .dropdown-menu a {
+      line-height: normal;
+      padding: .25rem 1.5rem;
+    }
+    .navbar {
+      padding-top: 100px;
+    }
+    .nav-item {
+      font-weight: 500;
+      font-weight: bold;
+    }
+  </style>
+</head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-custom">
-    <a class="navbar-brand" href="#">
-      <img src="/path-to-your-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-      File Upload Portal
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Upload</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">List Upload</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
-        </li>
-      </ul>
-      <div class="navbar-nav">
-        <a class="nav-item nav-link btn-text-auth" href="/login">Login</a>
-        <a class="nav-item nav-link btn-text-auth" href="/register">Register</a>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224648115399954443/b7wzVeW.png?ex=661e416f&is=660bcc6f&hm=fc4beb142a03dbb51bf89ad70f15caf2fb1143c66a26757a7c64dcc9e93a164a&" width="40" height="40" class="d-inline-block align-top" alt="Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Upload</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/files">List Upload</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/about">About</a>
+          </li>
+        </ul>
+        <div class="navbar-nav">
+          <% if(user) { %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224649818098630676/u9N87X0.png?ex=661e4305&is=660bce05&hm=a626b17726d452ef6f9ef09468d9a99283329a83b6c0060ec8455d0e34c86c79&" alt="" width="40" height="40" class="d-inline-block align-top">
+                <%= user.email %>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="/logout">Logout</a>
+              </div>
+            </li>
+          <% } else { %>
+            <a class="nav-item nav-link btn-text-auth active" href="/login"><u>Login</u></a>
+            <a class="nav-item nav-link btn-text-auth" href="/register">Register</a>
+          <% } %>
+        </div>
       </div>
     </div>
   </nav>

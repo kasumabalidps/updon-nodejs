@@ -153,11 +153,29 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/login', redirectIfAuthenticated, (req, res) => {
-  res.render('login');
+  const uploads = readDb(uploadsDb);
+  const userUploads = uploads.filter(upload => upload.userId === req.session.userId);
+
+  const users = readDb(usersDb);
+  const user = users.find(u => u.id === req.session.userId);
+
+  res.render('login', {
+    files: userUploads.map(upload => upload.fileName),
+    user: user
+  });
 });
 
 app.get('/register', redirectIfAuthenticated, (req, res) => {
-  res.render('register');
+  const uploads = readDb(uploadsDb);
+  const userUploads = uploads.filter(upload => upload.userId === req.session.userId);
+
+  const users = readDb(usersDb);
+  const user = users.find(u => u.id === req.session.userId);
+
+  res.render('register', {
+    files: userUploads.map(upload => upload.fileName),
+    user: user,
+  });
 });
 
 app.post('/login', (req, res) => {
@@ -175,14 +193,18 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, confirmPassword } = req.body;
   const users = readDb(usersDb);
   const hashedPassword = bcrypt.hashSync(password, 10);
   const newUser = { id: Date.now(), email, password: hashedPassword };
 
+  if (password !== confirmPassword) {
+    return res.render('register', { error: 'Passwords do not match.', user: null });
+  }
+
   users.push(newUser);
   writeDb(usersDb, users);
-  res.redirect('/login');
+  res.redirect('/files');
 });
 
 app.listen(port, () => {
