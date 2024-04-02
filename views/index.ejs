@@ -41,10 +41,10 @@
     }
     .drag-area {
       background-color: #ffffff;
-      border: 2px dashed #007bff;
+      border: 3px dashed #007bff;
       border-radius: 10px;
       width: 100%;
-      height: 200px;
+      height: 250px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -93,33 +93,33 @@
     .navbar-custom {
     min-height: 48px; /* Minimum height */
     max-height: 56px; /* Maximum height */
-  }
-
-  .navbar-custom .navbar-brand, .navbar-custom .nav-link {
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 48px;
-  }
-
-  .navbar-toggler {
-    padding: .25rem .75rem;
-  }
-
-  .navbar-custom .dropdown-menu a {
-    line-height: normal;
-    padding: .25rem 1.5rem;
-  }
-  .navbar {
-    padding-top: 100px;
-  }
+    }
+    .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+      padding-top: 0;
+      padding-bottom: 0;
+      line-height: 48px;
+    }
+    .navbar-toggler {
+      padding: .25rem .75rem;
+    }
+    .navbar-custom .dropdown-menu a {
+      line-height: normal;
+      padding: .25rem 1.5rem;
+    }
+    .navbar {
+      padding-top: 100px;
+    }
+    .nav-item {
+      font-weight: 500;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
-    <div class="container" style="padding-left: 15px; padding-right: 15px;"> <!-- Adjusted padding -->
-      <a class="navbar-brand bg-ligh" href="/">
-        <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224648115399954443/b7wzVeW.png?ex=661e416f&is=660bcc6f&hm=fc4beb142a03dbb51bf89ad70f15caf2fb1143c66a26757a7c64dcc9e93a164a&" width="30" height="30" class="d-inline-block align-top" alt="Logo">
-        File Upload Portal
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224648115399954443/b7wzVeW.png?ex=661e416f&is=660bcc6f&hm=fc4beb142a03dbb51bf89ad70f15caf2fb1143c66a26757a7c64dcc9e93a164a&" width="40" height="40" class="d-inline-block align-top" alt="Logo">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -140,7 +140,7 @@
           <% if(user) { %>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224649818098630676/u9N87X0.png?ex=661e4305&is=660bce05&hm=a626b17726d452ef6f9ef09468d9a99283329a83b6c0060ec8455d0e34c86c79&" alt="" width="30" height="30" class="d-inline-block align-top">
+                <img src="https://cdn.discordapp.com/attachments/1211835689784836151/1224649818098630676/u9N87X0.png?ex=661e4305&is=660bce05&hm=a626b17726d452ef6f9ef09468d9a99283329a83b6c0060ec8455d0e34c86c79&" alt="" width="40" height="40" class="d-inline-block align-top">
                 <%= user.email %>
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
