@@ -69,8 +69,19 @@ app.get('/', (req, res) => {
       console.log(err);
       return res.sendStatus(500);
     }
-    const user = req.session.userId ? { id: req.session.userId } : null;
-    res.render('index', { files: files, user: user });
+
+    const uploads = readDb(uploadsDb);
+    const userUploads = uploads.filter(upload => upload.userId === req.session.userId);
+  
+    const users = readDb(usersDb);
+    const user = users.find(u => u.id === req.session.userId);
+  
+    res.render('index', {
+      files: userUploads.map(upload => upload.fileName),
+      user: user
+    });
+    // const user = req.session.userId ? { id: req.session.userId } : null;
+    // res.render('index', { files: files, user: user });
   });
 });
 
@@ -107,7 +118,13 @@ app.get('/files', (req, res) => {
   const uploads = readDb(uploadsDb);
   const userUploads = uploads.filter(upload => upload.userId === req.session.userId);
 
-  res.render('files', { files: userUploads.map(upload => upload.fileName) });
+  const users = readDb(usersDb);
+  const user = users.find(u => u.id === req.session.userId);
+
+  res.render('files', {
+    files: userUploads.map(upload => upload.fileName),
+    user: user
+  });
 });
 
 function isAuthenticated(req, res, next) {
