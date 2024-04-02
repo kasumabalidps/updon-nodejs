@@ -1,28 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+      body {
+        background-color: #f7f7f7;
+        font-family: 'Poppins', sans-serif;
+      }
+      .navbar-custom {
+        background: linear-gradient(45deg, #007bff, #00dbde);
+        color: white;
+      }
+      .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+        color: white;
+      }
+      .navbar-custom .nav-link:hover, .navbar-custom .nav-item.active .nav-link {
+        color: #ffc107;
+      }
+      .btn-text-auth {
+        color: white;
+        background-color: transparent;
+        border: none;
+        transition: color 0.3s;
+      }
+      .btn-text-auth:hover {
+        color: #ffc107;
+        text-decoration: underline;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        margin-top: 20px;
+      }
+      .drag-area {
+        background-color: #ffffff;
+        border: 2px dashed #007bff;
+        border-radius: 10px;
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 15px;
+        transition: background-color 0.3s;
+      }
+      .drag-area.active {
+        background-color: #e9f5ff;
+        animation: wiggle 0.2s ease infinite;
+      }
+      .drag-area:hover {
+        cursor: pointer;
+      }
+      .icon {
+        font-size: 48px;
+        color: #007bff;
+        margin-bottom: 10px;
+      }
+      .btn-custom {
+        color: white;
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .btn-custom:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+      }
+      .progress {
+        height: 25px;
+        display: none;
+        margin-bottom: 20px;
+      }
+      .progress-bar {
+        width: 0%;
+        transition: width 0.4s ease;
+      }
+      #file-chosen {
+        margin-top: 10px;
+      }
+      @keyframes wiggle {
+        0%, 100% { transform: rotate(-3deg); }
+        50% { transform: rotate(3deg); }
+      }
+    </style>
+  </head>
 <body>
-  <div class="container mt-5">
-    <h2 class="text-center">Login</h2>
-    <form action="/login" method="post" class="mt-4">
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <a class="navbar-brand" href="#">
+      <img src="/path-to-your-logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+      File Upload Portal
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Upload</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">List Upload</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+      </ul>
+      <div class="navbar-nav">
+        <a class="nav-item nav-link btn-text-auth" href="/login">Login</a>
+        <a class="nav-item nav-link btn-text-auth" href="/register">Register</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="text-center mb-4">Login</h2>
+    <form action="/login" method="POST">
       <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" class="form-control" id="email" name="email" required autofocus>
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">Password:</label>
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <button type="submit" class="btn btn-primary btn-block">Login</button>
-      <p class="text-center mt-2">
-        Don't have an account? <a href="/register">Register</a>
-      </p>
     </form>
   </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('fileInput');
+  const dragArea = document.getElementById('drag-area');
+  const fileChosen = document.getElementById('file-chosen');
+  const uploadBtn = document.getElementById('upload-btn');
+  const fileList = document.getElementById('file-list');
+  const showMoreContainer = document.getElementById('show-more-container');
+  const progress = document.querySelector('.progress');
+  const progressBar = document.querySelector('.progress-bar');
+
+  // Menampilkan nama file ketika dipilih
+  fileInput.addEventListener('change', function() {
+    let fileNames = Array.from(this.files).map(file => file.name).join(', ');
+    fileChosen.textContent = fileNames;
+  });
+
+  // Mencegah perilaku default ketika file di-drag over
+  dragArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dragArea.classList.add('active');
+  });
+
+  // Menghapus highlight ketika keluar dari area drag
+  dragArea.addEventListener('dragleave', function(e) {
+    dragArea.classList.remove('active');
+  });
+
+  // Menangani file yang didrop
+  dragArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dragArea.classList.remove('active');
+
+    // Mendapatkan file dan mengupdate input file
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      fileInput.files = files;
+      let fileNames = Array.from(files).map(file => file.name).join(', ');
+      fileChosen.textContent = fileNames;
+      uploadFiles(files);
+    }
+  });
+
+  // Fungsi untuk mengunggah file
+  function uploadFiles(files) {
+  Array.from(files).forEach(file => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/upload', true);
+
+    // Menampilkan progress bar
+    progress.style.display = 'block';
+    progressBar.style.width = '0%'; // Reset progress bar untuk setiap file
+
+    xhr.upload.onprogress = function(e) {
+      if (e.lengthComputable) {
+        const percentComplete = (e.loaded / e.total) * 100;
+        progressBar.style.width = percentComplete + '%';
+        progressBar.textContent = Math.floor(percentComplete) + '%';
+      }
+    };
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Sembunyikan progress bar setelah upload selesai
+        setTimeout(() => {
+          progress.style.display = 'none';
+          progressBar.style.width = '0%';
+          progressBar.textContent = '0%';
+        }, 500); // Tambahkan sedikit delay untuk efek visual
+
+        // Tambahkan file yang baru diunggah ke daftar
+        updateFileList(file.name);
+      } else {
+        alert('Upload failed.');
+      }
+    };
+
+    xhr.onerror = function() {
+      // Sembunyikan progress bar jika terjadi error
+      progress.style.display = 'none';
+      progressBar.style.width = '0%';
+      progressBar.textContent = '0%';
+      alert('Upload failed.');
+    };
+
+    xhr.send(formData);
+  });
+}
+
+  // Fungsi untuk menambahkan file yang baru diunggah ke daftar
+  function updateFileList(fileName) {
+    const newFile = document.createElement('li');
+    newFile.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+    newFile.innerHTML = `${fileName} <a href="/uploads/${fileName}" class="btn btn-secondary btn-sm" download>Download</a>`;
+    fileList.appendChild(newFile);
+    updateShowMore();
+  }
+
+  // Fungsi untuk menampilkan atau menyembunyikan tombol "Show More"
+  function updateShowMore() {
+    const files = fileList.getElementsByTagName('li');
+    if (files.length > 3) {
+      showMoreContainer.innerHTML = '<a href="/files" class="btn btn-primary">Show More</a>';
+      showMoreContainer.style.display = 'block';
+    } else {
+      showMoreContainer.style.display = 'none';
+    }
+  }
+
+  // Event listener untuk tombol upload
+  uploadBtn.addEventListener('click', function(e) {
+    if (fileInput.files.length === 0) {
+      alert('Please select files to upload');
+      return;
+    }
+    uploadFiles(fileInput.files);
+  });
+
+  // Panggil updateShowMore saat halaman dimuat untuk menangani refresh halaman
+  document.addEventListener('DOMContentLoaded', updateShowMore);
+});
+
+  document.getElementById('show-more-btn').addEventListener('click', function() {
+    window.location.href = '/files';
+  });
+  </script>
 </body>
 </html>

@@ -44,7 +44,14 @@ function readDb(filePath) {
   if (!fs.existsSync(filePath)) {
     return [];
   }
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const rawData = fs.readFileSync(filePath, 'utf8');
+  try {
+    return JSON.parse(rawData); // Mencoba mem-parsing data JSON
+  } catch (error) {
+    console.error("Error parsing JSON from file:", filePath, error);
+    return []; // Mengembalikan array kosong jika terjadi error saat parsing
+  }
+  // return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 // Menulis data ke file JSON
 function writeDb(filePath, data) {
@@ -58,12 +65,13 @@ app.get('/', (req, res) => {
       console.log(err);
       return res.sendStatus(500);
     }
-    res.render('index', { files: files });
+    const user = req.session.userId ? { id: req.session.userId } : null;
+    res.render('index', { files: files, user: user });
   });
 });
 
 // Rute untuk upload file
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', isAuthenticated, upload.single('file'), (req, res) => {
   if (!req.session.userId) {
     return res.redirect('/login'); // Pengguna harus login
   }
@@ -107,6 +115,14 @@ function isAuthenticated(req, res, next) {
     res.redirect('/login'); // Pengguna tidak terautentikasi, arahkan ke halaman login
   }
 }
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
 
 app.post('/login', (req, res) => {
   const db = readDB();
