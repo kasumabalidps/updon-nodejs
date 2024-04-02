@@ -91,8 +91,8 @@
       50% { transform: rotate(3deg); }
     }
     .navbar-custom {
-    min-height: 48px; /* Minimum height */
-    max-height: 56px; /* Maximum height */
+    min-height: 48px;
+    max-height: 56px;
     }
     .navbar-custom .navbar-brand, .navbar-custom .nav-link {
       padding-top: 0;
@@ -211,23 +211,19 @@ document.addEventListener('DOMContentLoaded', function() {
     fileChosen.textContent = fileNames;
   });
 
-  // Mencegah perilaku default ketika file di-drag over
   dragArea.addEventListener('dragover', function(e) {
     e.preventDefault();
     dragArea.classList.add('active');
   });
 
-  // Menghapus highlight ketika keluar dari area drag
   dragArea.addEventListener('dragleave', function(e) {
     dragArea.classList.remove('active');
   });
 
-  // Menangani file yang didrop
   dragArea.addEventListener('drop', function(e) {
     e.preventDefault();
     dragArea.classList.remove('active');
 
-    // Mendapatkan file dan mengupdate input file
     const files = e.dataTransfer.files;
     if (files.length) {
       fileInput.files = files;
@@ -237,7 +233,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Fungsi untuk mengunggah file
   function uploadFiles(files) {
   Array.from(files).forEach(file => {
     const formData = new FormData();
@@ -246,9 +241,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/upload', true);
 
-    // Menampilkan progress bar
     progress.style.display = 'block';
-    progressBar.style.width = '0%'; // Reset progress bar untuk setiap file
+    progressBar.style.width = '0%';
 
     xhr.upload.onprogress = function(e) {
       if (e.lengthComputable) {
@@ -260,14 +254,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     xhr.onload = function() {
       if (xhr.status === 200) {
-        // Sembunyikan progress bar setelah upload selesai
         setTimeout(() => {
           progress.style.display = 'none';
           progressBar.style.width = '0%';
           progressBar.textContent = '0%';
-        }, 500); // Tambahkan sedikit delay untuk efek visual
+        }, 500);
 
-        // Tambahkan file yang baru diunggah ke daftar
         updateFileList(file.name);
       } else {
         alert('Upload failed.');
@@ -275,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     xhr.onerror = function() {
-      // Sembunyikan progress bar jika terjadi error
       progress.style.display = 'none';
       progressBar.style.width = '0%';
       progressBar.textContent = '0%';
@@ -286,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 }
 
-  // Fungsi untuk menambahkan file yang baru diunggah ke daftar
   function updateFileList(fileName) {
     const newFile = document.createElement('li');
     newFile.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
@@ -295,7 +285,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateShowMore();
   }
 
-  // Fungsi untuk menampilkan atau menyembunyikan tombol "Show More"
   function updateShowMore() {
     const files = fileList.getElementsByTagName('li');
     if (files.length > 3) {
@@ -306,7 +295,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Event listener untuk tombol upload
   uploadBtn.addEventListener('click', function(e) {
     if (fileInput.files.length === 0) {
       alert('Please select files to upload');
@@ -315,7 +303,6 @@ document.addEventListener('DOMContentLoaded', function() {
     uploadFiles(fileInput.files);
   });
 
-  // Panggil updateShowMore saat halaman dimuat untuk menangani refresh halaman
   document.addEventListener('DOMContentLoaded', updateShowMore);
 });
 
