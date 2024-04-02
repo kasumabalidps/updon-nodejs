@@ -10,7 +10,6 @@ const FileStore = require('session-file-store')(session);
 const app = express();
 const port = 3000;
 
-// Konfigurasi penyimpanan Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/')
@@ -23,13 +22,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Middleware
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
   store: new FileStore({
-    path: path.join(__dirname, 'sessions'), // Specify the path to store session files
+    path: path.join(__dirname, 'sessions'),
   }),
   secret: 'rahasiaKu',
   resave: false,
@@ -38,24 +36,21 @@ app.use(session({
 
 app.set('view engine', 'ejs');
 
-// Simulasi database sederhana dengan file JSON
 const dbFilePath = 'db.json';
 const usersDb = 'users.json';
 const uploadsDb = 'uploads.json'; 
 
-// Membaca data dari file JSON
 function readDb(filePath) {
   if (!fs.existsSync(filePath)) {
     return [];
   }
   const rawData = fs.readFileSync(filePath, 'utf8');
   try {
-    return JSON.parse(rawData); // Mencoba mem-parsing data JSON
+    return JSON.parse(rawData);
   } catch (error) {
     console.error("Error parsing JSON from file:", filePath, error);
-    return []; // Mengembalikan array kosong jika terjadi error saat parsing
+    return [];
   }
-  // return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 function addUpload(uploadData) {
@@ -63,12 +58,11 @@ function addUpload(uploadData) {
   uploads.push(uploadData);
   writeDb(uploadsDb, uploads);
 }
-// Menulis data ke file JSON
+
 function writeDb(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
-// Rute untuk halaman utama
 app.get('/', (req, res) => {
   fs.readdir('uploads/', (err, files) => {
     if (err) {
@@ -80,20 +74,18 @@ app.get('/', (req, res) => {
   });
 });
 
-// Rute untuk upload file
 app.post('/upload', isAuthenticated, upload.single('file'), (req, res) => {
   if (!req.session.userId) {
-    return res.redirect('/login'); // Pengguna harus login
+    return res.redirect('/login');
   }
 
   const uploads = readDb(uploadsDb);
-  uploads.push({ userId: req.session.userId, fileName: req.file.filename }); // Asosiasikan file dengan pengguna
+  uploads.push({ userId: req.session.userId, fileName: req.file.filename });
   writeDb(uploadsDb, uploads);
 
   res.redirect('/files');
 });
 
-// Rute untuk menghapus file
 app.delete('/delete/:name', (req, res) => {
   const fileName = req.params.name;
   const directoryPath = path.join(__dirname, 'uploads/');
@@ -109,39 +101,45 @@ app.delete('/delete/:name', (req, res) => {
 
 app.get('/files', (req, res) => {
   if (!req.session.userId) {
-    return res.redirect('/login'); // Pengguna harus login
+    return res.redirect('/login');
   }
 
   const uploads = readDb(uploadsDb);
-  const userUploads = uploads.filter(upload => upload.userId === req.session.userId); // Filter file berdasarkan pengguna
+  const userUploads = uploads.filter(upload => upload.userId === req.session.userId);
 
   res.render('files', { files: userUploads.map(upload => upload.fileName) });
 });
 
 function isAuthenticated(req, res, next) {
   if (req.session.userId) {
-    next(); // Pengguna terautentikasi, lanjutkan ke rute berikutnya
+    next();
   } else {
-    res.redirect('/login'); // Pengguna tidak terautentikasi, arahkan ke halaman login
+    res.redirect('/login');
+  }
+}
+
+function redirectIfAuthenticated(req, res, next) {
+  if (req.session.userId) {
+    res.redirect('/');
+  } else {
+    next();
   }
 }
 
 app.get('/logout', (req, res) => {
-  // Hapus sesi pengguna
   req.session.destroy(err => {
     if (err) {
       console.error('Error during session destruction:', err);
     }
-    // Redirect ke halaman login setelah logout
     res.redirect('/login');
   });
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', redirectIfAuthenticated, (req, res) => {
   res.render('login');
 });
 
-app.get('/register', (req, res) => {
+app.get('/register', redirectIfAuthenticated, (req, res) => {
   res.render('register');
 });
 
@@ -152,13 +150,13 @@ app.post('/login', (req, res) => {
   const user = users.find(u => u.email === email);
 
   if (user && bcrypt.compareSync(password, user.password)) {
-    req.session.userId = user.id; // Simpan ID pengguna di session
+    req.session.userId = user.id;
     res.redirect('/files');
   } else {
     res.redirect('/login');
   }
 });
-// Rute untuk register
+
 app.post('/register', (req, res) => {
   const { email, password } = req.body;
   const users = readDb(usersDb);
