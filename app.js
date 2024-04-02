@@ -28,11 +28,12 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
-  store: new FileStore(), // Use FileStore as the session store
+  store: new FileStore({
+    path: path.join(__dirname, 'sessions'), // Specify the path to store session files
+  }),
   secret: 'rahasiaKu',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
 }));
 
 app.set('view engine', 'ejs');
