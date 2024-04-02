@@ -80,8 +80,6 @@ app.get('/', (req, res) => {
       files: userUploads.map(upload => upload.fileName),
       user: user
     });
-    // const user = req.session.userId ? { id: req.session.userId } : null;
-    // res.render('index', { files: files, user: user });
   });
 });
 
@@ -161,7 +159,7 @@ app.get('/login', redirectIfAuthenticated, (req, res) => {
 
   res.render('login', {
     files: userUploads.map(upload => upload.fileName),
-    user: user
+    user: null
   });
 });
 
@@ -184,11 +182,11 @@ app.post('/login', (req, res) => {
   const users = readDb(usersDb);
   const user = users.find(u => u.email === email);
 
-  if (user && bcrypt.compareSync(password, user.password)) {
+  if (bcrypt.compareSync(password, user.password)) {
     req.session.userId = user.id;
     res.redirect('/files');
   } else {
-    res.redirect('/login');
+    res.render('login', { error: 'Invalid email or password.', user: null });
   }
 });
 

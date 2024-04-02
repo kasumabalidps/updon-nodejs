@@ -158,6 +158,11 @@
 
   <div class="container">
     <h2 class="text-center mb-4">Login</h2>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div id="error-alert" class="alert alert-danger" role="alert">
+        <%= error %>
+      </div>
+    <% } %>
     <form action="/login" method="POST">
       <div class="form-group">
         <label for="email">Email:</label>
@@ -183,6 +188,22 @@ document.addEventListener('DOMContentLoaded', function() {
   const showMoreContainer = document.getElementById('show-more-container');
   const progress = document.querySelector('.progress');
   const progressBar = document.querySelector('.progress-bar');
+
+  var errorAlert = document.getElementById('error-alert');
+  if (errorAlert) {
+    // Jika ada, setel timeout untuk menghilangkannya setelah 5 detik
+    setTimeout(function() {
+      errorAlert.style.display = 'none';
+    }, 5000);
+  }
+
+  const alertError = document.getElementById('alert-error');
+  if (alertError) {
+    setTimeout(function() {
+      alertError.style.display = 'none';
+    }, 5000);
+  }
+
 
   // Menampilkan nama file ketika dipilih
   fileInput.addEventListener('change', function() {

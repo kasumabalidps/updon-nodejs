@@ -158,13 +158,13 @@
 
   <div class="container">
     <h2 class="text-center mb-4">Register</h2>
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div id="error-alert" class="alert alert-danger" role="alert">
+        <%= error %>
+      </div>
+    <% } %>
     <div id="alert-error" class="alert alert-danger" style="display: none;">Password and Confirm Password do not match.</div>
     <form id="register-form" action="/register" method="POST">
-      <% if (typeof error !== 'undefined' && error) { %>
-        <div class="alert alert-danger" role="alert">
-          <%= error %>
-        </div>
-      <% } %>
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" class="form-control" id="email" name="email" required>
@@ -193,6 +193,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const showMoreContainer = document.getElementById('show-more-container');
   const progress = document.querySelector('.progress');
   const progressBar = document.querySelector('.progress-bar');
+
+  var errorAlert = document.getElementById('error-alert');
+      if (errorAlert) {
+        setTimeout(function() {
+          errorAlert.style.display = 'none';
+        }, 5000);
+      }
 
   // Menampilkan nama file ketika dipilih
   fileInput.addEventListener('change', function() {
