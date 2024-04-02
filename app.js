@@ -36,20 +36,19 @@ app.set('view engine', 'ejs');
 
 // Simulasi database sederhana dengan file JSON
 const dbFilePath = 'db.json';
+const usersDb = 'users.json';
+const uploadsDb = 'uploads.json'; 
 
 // Membaca data dari file JSON
-function readDB() {
-  if (!fs.existsSync(dbFilePath)) {
-    return { users: [] };
+function readDb(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return [];
   }
-  const rawdata = fs.readFileSync(dbFilePath);
-  return JSON.parse(rawdata);
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
-
 // Menulis data ke file JSON
-function writeDB(data) {
-  const dataString = JSON.stringify(data, null, 2);
-  fs.writeFileSync(dbFilePath, dataString);
+function writeDb(filePath, data) {
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
 // Rute untuk halaman utama
@@ -65,7 +64,15 @@ app.get('/', (req, res) => {
 
 // Rute untuk upload file
 app.post('/upload', upload.single('file'), (req, res) => {
-  res.redirect('/');
+  if (!req.session.userId) {
+    return res.redirect('/login'); // Pengguna harus login
+  }
+
+  const uploads = readDb(uploadsDb);
+  uploads.push({ userId: req.session.userId, fileName: req.file.filename }); // Asosiasikan file dengan pengguna
+  writeDb(uploadsDb, uploads);
+
+  res.redirect('/files');
 });
 
 // Rute untuk menghapus file
@@ -82,37 +89,47 @@ app.delete('/delete/:name', (req, res) => {
   });
 });
 
-// Rute untuk login
-app.get('/login', (req, res) => {
-  res.render('login');
+app.get('/files', (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect('/login'); // Pengguna harus login
+  }
+
+  const uploads = readDb(uploadsDb);
+  const userUploads = uploads.filter(upload => upload.userId === req.session.userId); // Filter file berdasarkan pengguna
+
+  res.render('files', { files: userUploads.map(upload => upload.fileName) });
 });
+
+function isAuthenticated(req, res, next) {
+  if (req.session.userId) {
+    next(); // Pengguna terautentikasi, lanjutkan ke rute berikutnya
+  } else {
+    res.redirect('/login'); // Pengguna tidak terautentikasi, arahkan ke halaman login
+  }
+}
 
 app.post('/login', (req, res) => {
   const db = readDB();
-  const user = db.users.find(u => u.email === req.body.email);
-  if (user && bcrypt.compareSync(req.body.password, user.password)) {
-    req.session.userId = user.id;
-    res.redirect('/');
+  const { email, password } = req.body;
+  const users = readDb(usersDb);
+  const user = users.find(u => u.email === email);
+
+  if (user && bcrypt.compareSync(password, user.password)) {
+    req.session.userId = user.id; // Simpan ID pengguna di session
+    res.redirect('/files');
   } else {
     res.redirect('/login');
   }
 });
-
 // Rute untuk register
-app.get('/register', (req, res) => {
-  res.render('register');
-});
-
 app.post('/register', (req, res) => {
-  const db = readDB();
-  const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-  const newUser = {
-    id: Date.now(),
-    email: req.body.email,
-    password: hashedPassword
-  };
-  db.users.push(newUser);
-  writeDB(db);
+  const { email, password } = req.body;
+  const users = readDb(usersDb);
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  const newUser = { id: Date.now(), email, password: hashedPassword };
+
+  users.push(newUser);
+  writeDb(usersDb, users);
   res.redirect('/login');
 });
 
