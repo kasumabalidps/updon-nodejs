@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 const path = require('path');
+const FileStore = require('session-file-store')(session);
 
 const app = express();
 const port = 3000;
@@ -27,9 +28,11 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
+  store: new FileStore(), // Use FileStore as the session store
   secret: 'rahasiaKu',
   resave: false,
   saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
 }));
 
 app.set('view engine', 'ejs');
@@ -52,6 +55,12 @@ function readDb(filePath) {
     return []; // Mengembalikan array kosong jika terjadi error saat parsing
   }
   // return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function addUpload(uploadData) {
+  const uploads = readDb(uploadsDb);
+  uploads.push(uploadData);
+  writeDb(uploadsDb, uploads);
 }
 // Menulis data ke file JSON
 function writeDb(filePath, data) {
@@ -125,7 +134,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const db = readDB();
+  const db = readDb();
   const { email, password } = req.body;
   const users = readDb(usersDb);
   const user = users.find(u => u.email === email);
