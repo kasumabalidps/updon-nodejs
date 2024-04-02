@@ -158,9 +158,9 @@
 
   <div class="container">
     <h2>Uploaded Files</h2>
-    <div class="view-switch">
-      <button id="list-view-btn">List View</button>
-      <button id="plot-view-btn">Plot View</button>
+    <div class="view-switch text-right">
+      <button id="list-view-btn" class="btn btn-primary">List View</button>
+      <button id="grid-view-btn" class="btn btn-primary">Grid View</button>
     </div>
   
     <!-- Tampilan List -->
@@ -176,12 +176,14 @@
     </div>
   
     <!-- Tampilan Plot -->
-    <div id="plot-view" class="file-view" style="display: none;">
+    <div id="grid-view" class="file-view" style="display: none;">
       <div class="row">
         <% files.forEach(function(file) { %>
-          <div class="col-md-4">
-            <div class="card">
-              <img src="/uploads/<%= file %>" class="card-img-top" alt="<%= file %>">
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 file-card">
+              <% if (/\.(jpe?g|png|gif|bmp)$/i.test(file)) { %>
+                <img src="/uploads/<%= file %>" class="card-img-top" alt="<%= file %>">
+              <% } %>
               <div class="card-body">
                 <h5 class="card-title"><%= file %></h5>
                 <a href="/uploads/<%= file %>" class="btn btn-primary" download>Download</a>
@@ -191,7 +193,6 @@
         <% }); %>
       </div>
     </div>
-  </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -207,9 +208,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const progressBar = document.querySelector('.progress-bar');
 
   const listViewBtn = document.getElementById('list-view-btn');
-  const plotViewBtn = document.getElementById('plot-view-btn');
+  const plotViewBtn = document.getElementById('grid-view-btn');
   const listView = document.getElementById('list-view');
-  const plotView = document.getElementById('plot-view');
+  const plotView = document.getElementById('grid-view');
 
   listViewBtn.addEventListener('click', function() {
     listView.style.display = 'block';
