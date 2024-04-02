@@ -126,6 +126,17 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+app.get('/logout', (req, res) => {
+  // Hapus sesi pengguna
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error during session destruction:', err);
+    }
+    // Redirect ke halaman login setelah logout
+    res.redirect('/login');
+  });
+});
+
 app.get('/login', (req, res) => {
   res.render('login');
 });

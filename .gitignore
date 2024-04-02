@@ -44,6 +44,9 @@ jspm_packages/
 
 # Extra
 uploads/
+session/
+users.json
+uploads.json
 *.dmg
 *.pdf
 
