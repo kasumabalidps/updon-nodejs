@@ -179,16 +179,19 @@ app.get('/register', redirectIfAuthenticated, (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const db = readDb();
   const { email, password } = req.body;
   const users = readDb(usersDb);
   const user = users.find(u => u.email === email);
 
-  if (bcrypt.compareSync(password, user.password)) {
-    req.session.userId = user.id;
-    res.redirect('/files');
+  if (user) {
+    if (bcrypt.compareSync(password, user.password)) {
+      req.session.userId = user.id;
+      res.redirect('/files');
+    } else {
+      res.render('login', { error: 'Invalid email or password.', user: null });
+    }
   } else {
-    res.render('login', { error: 'Invalid email or password.', user: null });
+      res.render('login', { error: 'Invalid email or password.', user: null });
   }
 });
 
