@@ -188,11 +188,8 @@
           <% if (/\.(jpe?g|png|gif|bmp)$/i.test(file)) { %>
             <img src="/uploads/<%= file %>" class="card-img-top" alt="<%= file %>">
           <% } else if (/\.(pdf)$/i.test(file)) { %>
-            <!-- Embed PDF file -->
             <embed src="/uploads/<%= file %>" class="card-img-top" style="width: 100%; height: 200px;" type="application/pdf">
-          <% } else if (/\.(pptx|docx)$/i.test(file)) { %>
-            <!-- Handle PPTX and DOCX differently or use other methods -->
-          <% } %>
+          <% } else if (/\.(pptx|docx)$/i.test(file)) { %>          <% } %>
           <div class="card-body">
             <h5 class="card-title"><%= file %></h5>
             <a href="/uploads/<%= file %>" class="btn btn-primary" download>Download</a>
