@@ -113,6 +113,22 @@
       font-weight: 500;
       font-weight: bold;
     }
+    .list-group-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .file-name {
+      flex-grow: 1; /* Memastikan bahwa nama file mengambil ruang yang tersedia */
+    }
+    .file-actions {
+      display: flex;
+      align-items: center; /* Menyelaraskan tombol dan ikon secara vertikal */
+    }
+    .fas.fa-trash {
+      cursor: pointer; /* Menambahkan efek pointer pada ikon trash */
+      margin-left: 10px; /* Memberikan sedikit ruang antara tombol download dan ikon trash */
+    }
   </style>
 </head>
 <body>
@@ -167,17 +183,22 @@
       </div>
     </div>
   
-  <!-- Tampilan List -->
-  <div id="list-view" class="file-view">
-    <ul class="list-group">
-      <% files.forEach(function(file) { %>
-        <li class="list-group-item">
+<!-- Tampilan List -->
+<div id="list-view" class="file-view">
+  <ul class="list-group">
+    <% files.forEach(function(file) { %>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="file-name">
           <%= file %>
+        </div>
+        <div class="file-actions">
           <a href="/uploads/<%= file %>" class="btn btn-secondary btn-sm" download>Download</a>
-        </li>
-      <% }); %>
-    </ul>
-  </div>
+          <a href="/delete/<%= file %>" onclick="confirmDelete('<%= file %>')" class="fas fa-trash delete-btn" style="color: red; margin-left: 10px;" onclick="return confirmDelete('<%= file %>');"></a>
+        </div>
+      </li>
+    <% }); %>
+  </ul>
+</div>
 
 <!-- Tampilan Grid -->
 <div id="grid-view" class="file-view" style="display: none;">
@@ -317,6 +338,10 @@ document.addEventListener('DOMContentLoaded', function() {
     newFile.innerHTML = `${fileName} <a href="/uploads/${fileName}" class="btn btn-secondary btn-sm" download>Download</a>`;
     fileList.appendChild(newFile);
     updateShowMore();
+  }
+
+  function confirmDelete(fileName) {
+    return confirm(`Apakah Anda yakin ingin menghapus file "${fileName}"?`);
   }
 
   // Fungsi untuk menampilkan atau menyembunyikan tombol "Show More"

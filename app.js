@@ -79,8 +79,8 @@ app.get('/', (req, res) => {
     const user = users.find(u => u.id === req.session.userId);
   
     res.render('index', {
-      files: userUploads.map(upload => upload.fileName),
-      user: user
+      files: files,
+      user: req.session.userId ? { id: req.session.userId } : null
     });
   });
 });
@@ -97,16 +97,29 @@ app.post('/upload', isAuthenticated, upload.single('file'), (req, res) => {
   res.redirect('/files');
 });
 
-app.delete('/delete/:name', (req, res) => {
+app.get('/delete/:name', (req, res) => {
   const fileName = req.params.name;
-  const directoryPath = path.join(__dirname, 'uploads/');
+  const filePath = path.join(__dirname, 'uploads', fileName);
 
-  fs.unlink(path.join(directoryPath, fileName), (err) => {
+  // Langkah 1: Hapus file dari sistem file
+  fs.unlink(filePath, (err) => {
     if (err) {
-      console.log(err);
-      return res.status(500).send({ message: "Could not delete the file. " + err });
+      console.error('Gagal menghapus file:', err);
+      return res.status(500).send('Gagal menghapus file.');
     }
-    res.status(200).send({ message: "File is deleted." });
+    console.log('File berhasil dihapus.');
+
+    // Langkah 2: Baca data uploads dari file JSON
+    const uploads = readDb(uploadsDb);
+
+    // Langkah 3: Hapus entri file yang dihapus dari array uploads
+    const updatedUploads = uploads.filter(upload => upload.fileName !== fileName);
+
+    // Langkah 4: Tulis kembali data yang diperbarui ke file JSON
+    writeDb(uploadsDb, updatedUploads);
+
+    // Langkah 5: Redirect ke halaman /files
+    res.redirect('/files');
   });
 });
 

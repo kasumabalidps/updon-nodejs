@@ -174,17 +174,17 @@
     </form>
     <h4>Uploaded Files:</h4>
     <ul class="list-group" id="file-list">
-      <% if(files && files.length > 0) { %>
-        <% files.slice(0, 3).forEach(function(file) { %>
+      <% if(files.length > 0) { %>
+        <% files.forEach(function(file) { %>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <%= file %>
             <a href="/uploads/<%= file %>" class="fas fa-download" download></a>
           </li>
-        <% }); %>
-      <% } else { %>
-        <li class="list-group-item no-files">No files uploaded yet.</li>
-      <% } %>
-    </ul>
+          <% }); %>
+        <% } else { %>
+          <li class="list-group-item no-files">No files uploaded yet.</li>
+        <% } %>
+      </ul>
     <% if(files && files.length > 3) { %>
       <div class="text-center mt-3">
         <a href="/files" id="show-more-btn" class="btn btn-primary">Show More</a>
@@ -254,12 +254,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     xhr.onload = function() {
       if (xhr.status === 200) {
+        // Sembunyikan progress bar setelah upload selesai
         setTimeout(() => {
           progress.style.display = 'none';
           progressBar.style.width = '0%';
           progressBar.textContent = '0%';
         }, 500);
-
+    
+        // Tambahkan file yang baru diunggah ke daftar
         updateFileList(file.name);
       } else {
         alert('Upload failed.');
@@ -277,13 +279,20 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 }
 
-  function updateFileList(fileName) {
-    const newFile = document.createElement('li');
-    newFile.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-    newFile.innerHTML = `${fileName} <a href="/uploads/${fileName}" class="btn btn-secondary btn-sm" download>Download</a>`;
-    fileList.appendChild(newFile);
-    updateShowMore();
+function updateFileList(fileName) {
+  // Cek apakah ada elemen dengan kelas 'no-files' dan hapus jika ada
+  const noFilesItem = document.querySelector('.no-files');
+  if (noFilesItem) {
+    noFilesItem.remove();
   }
+
+  // Tambahkan file yang baru diunggah ke daftar
+  const newFile = document.createElement('li');
+  newFile.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+  newFile.innerHTML = `${fileName} <a href="/uploads/${fileName}" class="btn btn-secondary btn-sm" download>Download</a>`;
+  fileList.appendChild(newFile);
+  updateShowMore();
+}
 
   function updateShowMore() {
     const files = fileList.getElementsByTagName('li');
