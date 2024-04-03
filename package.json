@@ -21,6 +21,7 @@
     "fastify": "^4.26.2",
     "mongoose": "^8.2.4",
     "multer": "^1.4.5-lts.1",
+    "node-telegram-bot-api": "^0.65.1",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.7.5"
   }

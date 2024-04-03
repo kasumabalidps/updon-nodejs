@@ -80,7 +80,8 @@ app.get('/', (req, res) => {
   
     res.render('index', {
       files: files,
-      user: req.session.userId ? { id: req.session.userId } : null
+      user: user
+      // user: req.session.userId ? { id: req.session.userId } : null
     });
   });
 });
